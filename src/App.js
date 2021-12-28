@@ -1,6 +1,6 @@
 import twitterLogo from "./assets/twitter-logo.svg";
 import "./App.css";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import { Program, Provider, web3 } from "@project-serum/anchor";
 
@@ -184,7 +184,7 @@ const App = () => {
             {/* We use index as the key instead, also, the src is now item.gifLink */}
             {gifList.map((item, index) => (
               <div className="gif-item" key={index}>
-                <img src={item.gifLink} />
+                <img src={item.gifLink} alt="gif" />
               </div>
             ))}
           </div>
