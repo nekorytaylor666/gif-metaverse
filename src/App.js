@@ -7,7 +7,7 @@ import { Program, Provider, web3 } from "@project-serum/anchor";
 import idl from "./idl.json";
 import kp from "./keypair.json";
 
-const { SystemProgram, Keypair } = web3;
+const { SystemProgram } = web3;
 const arr = Object.values(kp._keypair.secretKey);
 const secret = new Uint8Array(arr);
 const baseAccount = web3.Keypair.fromSecretKey(secret);
@@ -19,12 +19,7 @@ const opts = {
 // Constants
 const TWITTER_HANDLE = "akmt_dev";
 const TWITTER_LINK = `https://twitter.com/akmt_dev`;
-const TEST_GIFS = [
-  "https://i.giphy.com/media/eIG0HfouRQJQr1wBzz/giphy.webp",
-  "https://media3.giphy.com/media/L71a8LW2UrKwPaWNYM/giphy.gif?cid=ecf05e47rr9qizx2msjucl1xyvuu47d7kf25tqt2lvo024uo&rid=giphy.gif&ct=g",
-  "https://media4.giphy.com/media/AeFmQjHMtEySooOc8K/giphy.gif?cid=ecf05e47qdzhdma2y3ugn32lkgi972z9mpfzocjj6z1ro4ec&rid=giphy.gif&ct=g",
-  "https://i.giphy.com/media/PAqjdPkJLDsmBRSYUp/giphy.webp",
-];
+
 const App = () => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [gifList, setGifList] = useState([]);
@@ -36,7 +31,21 @@ const App = () => {
     window.addEventListener("load", onLoad);
     return () => window.removeEventListener("load", onLoad);
   }, []);
+  const getGifList = async () => {
+    try {
+      const provider = getProvider();
+      const program = new Program(idl, programID, provider);
+      const account = await program.account.baseAccount.fetch(
+        baseAccount.publicKey
+      );
 
+      console.log("Got the account", account);
+      setGifList(account.gifList);
+    } catch (error) {
+      console.log("Error in getGifList: ", error);
+      setGifList(null);
+    }
+  };
   useEffect(() => {
     if (walletAddress) {
       console.log("Fetching GIF list...");
@@ -82,21 +91,6 @@ const App = () => {
       const response = await solana.connect();
       console.log("Connected with Public Key:", response.publicKey.toString());
       setWalletAddress(response.publicKey.toString());
-    }
-  };
-  const getGifList = async () => {
-    try {
-      const provider = getProvider();
-      const program = new Program(idl, programID, provider);
-      const account = await program.account.baseAccount.fetch(
-        baseAccount.publicKey
-      );
-
-      console.log("Got the account", account);
-      setGifList(account.gifList);
-    } catch (error) {
-      console.log("Error in getGifList: ", error);
-      setGifList(null);
     }
   };
 
