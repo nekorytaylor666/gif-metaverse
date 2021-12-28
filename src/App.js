@@ -1,6 +1,6 @@
 import twitterLogo from "./assets/twitter-logo.svg";
 import "./App.css";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import { Program, Provider, web3 } from "@project-serum/anchor";
 
@@ -51,6 +51,7 @@ const App = () => {
       console.log("Fetching GIF list...");
       getGifList();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   const getProvider = () => {
